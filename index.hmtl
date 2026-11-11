@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OFFLINE</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#110e1c;color:#fff;font-family:Arial,sans-serif;padding-bottom:90px}
+header{padding:20px;display:flex;justify-content:space-between;align-items:center;background:#1c172a}
+.logo{font-size:25px;font-weight:900;color:#c59cff;letter-spacing:3px}
+.coins{background:#352747;padding:10px 16px;border-radius:30px;color:#ffe49a}
+main{max-width:650px;margin:auto;padding:20px}
+h1{font-size:32px}
+h1 span{color:#c59cff}
+p{color:#b9b0c9;line-height:1.5}
+.card{background:#211b30;border:1px solid #403450;border-radius:22px;padding:22px;margin:18px 0}
+.hero{text-align:center;padding:30px 15px;background:linear-gradient(140deg,#39284e,#211b30)}
+.hero .cat{font-size:85px}
+.timer{text-align:center;font-size:52px;font-weight:bold;margin:25px}
+button,select{border:0;border-radius:12px;padding:13px;background:#352747;color:white;cursor:pointer;font-size:14px}
+button.selected{background:#a77be8;color:#190f25}
+.primary{background:#b58aff;color:#1c1228;font-weight:bold;width:100%;margin-top:15px}
+.durations{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+select{width:100%;margin-top:10px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#1c172a;display:flex;justify-content:space-around;padding:12px 3px}
+.nav button{background:transparent;color:#c7badb;font-size:12px;padding:8px}
+.nav button.active{color:#c59cff}
+.page{display:none}
+.page.active{display:block}
+.shopgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.item{text-align:center;background:#30253f;border-radius:16px;padding:15px}
+.item .art{font-size:42px}
+.item button{width:100%;margin-top:8px;background:#b58aff;color:#1c1228;font-weight:bold}
+.avatar{text-align:center;font-size:100px;padding:15px}
+.avatar-options{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.avatar-options button{font-size:28px}
+.progress{height:12px;background:#453953;border-radius:20px;overflow:hidden}
+.progress div{height:100%;width:0;background:#b58aff}
+.small{font-size:12px;color:#9d93ac}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">OFFLINE ✦</div>
+ <div class="coins">✦ <span id="coins">0</span> FOCUS</div>
+</header>
+
+<main>
+
+<section id="home" class="page active">
+ <div class="card hero">
+  <div class="cat">🐈‍⬛</div>
+  <h1>Tu mundo es más grande <span>offline.</span></h1>
+  <p>Desconéctate un ratito y disfruta de tu tiempo.</p>
+ </div>
+
+ <div class="card">
+  <h2>🌙 Mi momento offline</h2>
+  <div class="timer" id="timer">15:00</div>
+  <div class="durations">
+   <button class="selected" data-min="15">15 min</button>
+   <button data-min="30">30 min</button>
+   <button data-min="60">1 hora</button>
+   <button data-min="120">2 horas</button>
+  </div>
+  <p>¿Qué harás durante tu pausa?</p>
+  <select id="goal">
+   <option>Leer un libro 📖</option>
+   <option>Estudiar 📚</option>
+   <option>Dibujar 🎨</option>
+   <option>Descansar 🌷</option>
+   <option>Pasar tiempo con mi familia 💗</option>
+   <option>Salir a caminar 🌳</option>
+  </select>
+  <button class="primary" id="start">Comenzar pausa</button>
+  <button id="cancel" style="width:100%;margin-top:8px" disabled>Cancelar</button>
+  <p class="small">Las sesiones son voluntarias. La app no bloquea otras aplicaciones.</p>
+ </div>
+
+ <div class="card">
+  <h2>🔥 Mi racha</h2>
+  <h1 id="streak">0 días</h1>
+  <p>¡Cada pausa cuenta! Avanza a tu propio ritmo.</p>
+ </div>
+</section>
+
+<section id="shop" class="page">
+ <h1>Mi <span>tiendita</span> ✨</h1>
+ <p>Compra accesorios con tus monedas FOCUS.</p>
+ <div class="shopgrid" id="shopgrid"></div>
+</section>
+
+<section id="avatar" class="page">
+ <h1>Mi <span>avatar</span> ♡</h1>
+ <div class="card">
+  <div class="avatar" id="avatar">🐈‍⬛</div>
+  <h2 style="text-align:center">Mi compañero offline</h2>
+  <div class="avatar-options">
+   <button data-avatar="🐈‍⬛">🐈‍⬛</button>
+   <button data-avatar="🐻">🐻</button>
+   <button data-avatar="🐰">🐰</button>
+   <button data-avatar="🐸">🐸</button>
+   <button data-avatar="🦊">🦊</button>
+   <button data-avatar="🐼">🐼</button>
+  </div>
+ </div>
+ <div class="card">
+  <h2>🎀 Mis recompensas</h2>
+  <p id="owned">Todavía no tienes accesorios.</p>
+ </div>
+</section>
+
+<section id="streaks" class="page">
+ <h1>Mis <span>rachas</span> 🔥</h1>
+ <div class="card" style="text-align:center">
+  <div style="font-size:65px">🔥</div>
+  <h1 id="streak2">0 días</h1>
+  <p>Completa una sesión en el día para mantener tu racha.</p>
+  <div class="progress"><div id="progress"></div></div>
+  <p id="progressText">Tu aventura comienza hoy.</p>
+ </div>
+</section>
+
+<section id="profile" class="page">
+ <h1>Mi <span>perfil</span> 🌌</h1>
+ <div class="card" style="text-align:center">
+  <div style="font-size:60px">🌙</div>
+  <h2>Explorador offline</h2>
+  <p>Nivel <b id="level">1</b></p>
+ </div>
+ <div class="card">
+  <h3>✦ FOCUS ganados: <span id="earned">0</span></h3>
+  <h3>⏳ Minutos offline: <span id="minutes">0</span></h3>
+  <h3>🏅 Sesiones completadas: <span id="sessions">0</span></h3>
+ </div>
+</section>
+
+</main>
+
+<nav class="nav">
+ <button class="active" data-page="home">⌂<br>Inicio</button>
+ <button data-page="shop">✧<br>Tienda</button>
+ <button data-page="avatar">♡<br>Avatar</button>
+ <button data-page="streaks">🔥<br>Rachas</button>
+ <button data-page="profile">☻<br>Perfil</button>
+</nav>
+
+<script>
+const defaults={coins:0,earned:0,minutes:0,sessions:0,streak:0,lastDay:"",avatar:"🐈‍⬛",owned:[]};
+let data;
+try{data={...defaults,...JSON.parse(localStorage.getItem("offlineData")||"{}")}}
+catch(e){data={...defaults}}
+let chosen=15,remaining=900,interval=null,running=false;
+
+const products=[
+ {id:"crown",name:"Coronita",art:"👑",price:35},
+ {id:"star",name:"Estrellita",art:"⭐",price:20},
+ {id:"plant",name:"Plantita",art:"🪴",price:45},
+ {id:"moon",name:"Luna mágica",art:"🌙",price:60},
+ {id:"heart",name:"Corazón",art:"💗",price:30},
+ {id:"rainbow",name:"Arcoíris",art:"🌈",price:75}
+];
+
+function save(){
+ localStorage.setItem("offlineData",JSON.stringify(data));
+ render();
+}
+
+function render(){
+ document.getElementById("coins").textContent=data.coins;
+ document.getElementById("streak").textContent=data.streak+" días";
+ document.getElementById("streak2").textContent=data.streak+" días";
+ document.getElementById("earned").textContent=data.earned;
+ document.getElementById("minutes").textContent=data.minutes;
+ document.getElementById("sessions").textContent=data.sessions;
+ document.getElementById("avatar").textContent=data.avatar;
+ document.getElementById("level").textContent=1+Math.floor(data.earned/100);
+ document.getElementById("owned").textContent=data.owned.length?data.owned.map(id=>products.find(p=>p.id===id)?.art+" "+products.find(p=>p.id===id)?.name).join(" · "):"Todavía no tienes accesorios.";
+ document.getElementById("progress").style.width=Math.min(100,(data.streak%7)/7*100)+"%";
+ document.getElementById("progressText").textContent=data.streak+" días de racha. ¡Sigue así!";
+ document.getElementById("shopgrid").innerHTML=products.map(p=>{
+  let owned=data.owned.includes(p.id);
+  return `<div class="item"><div class="art">${p.art}</div><h3>${p.name}</h3><p>✦ ${p.price} FOCUS</p><button data-buy="${p.id}" ${owned||data.coins<p.price?"disabled":""}>${owned?"Comprado":"Comprar"}</button></div>`;
+ }).join("");
+}
+
+function showPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+}
+
+document.querySelectorAll(".nav button").forEach(b=>{
+ b.onclick=()=>showPage(b.dataset.page);
+});
+
+document.querySelectorAll(".durations button").forEach(b=>{
+ b.onclick=()=>{
+  if(running)return;
+  document.querySelectorAll(".durations button").forEach(x=>x.classList.remove("selected"));
+  b.classList.add("selected");
+  chosen=Number(b.dataset.min);
+  remaining=chosen*60;
+  updateTimer();
+ };
+});
+
+function updateTimer(){
+ document.getElementById("timer").textContent=
+ String(Math.floor(remaining/60)).padStart(2,"0")+":"+
+ String(remaining%60).padStart(2,"0");
+}
+
+function stop(){
+ clearInterval(interval);
+ interval=null;
+ running=false;
+ document.getElementById("start").textContent="Comenzar pausa";
+ document.getElementById("cancel").disabled=true;
+}
+
+function tick(){
+ remaining--;
+ updateTimer();
+ if(remaining<=0)complete();
+}
+
+function complete(){
+ stop();
+ let reward=chosen===15?5:chosen===30?10:chosen===60?25:60;
+ data.coins+=reward;
+ data.earned+=reward;
+ data.sessions++;
+ data.minutes+=chosen;
+ let today=new Date().toLocaleDateString("en-CA");
+ if(data.lastDay!==today){
+  let yesterday=new Date();
+  yesterday.setDate(yesterday.getDate()-1);
+  let yesterdayString=yesterday.toLocaleDateString("en-CA");
+  data.streak=data.lastDay===yesterdayString?data.streak+1:1;
+  data.lastDay=today;
+ }
+ remaining=chosen*60;
+ updateTimer();
+ save();
+ alert("¡Felicidades! Ganaste "+reward+" FOCUS ✨");
+}
+
+document.getElementById("start").onclick=()=>{
+ if(running){
+  clearInterval(interval);
+  interval=null;
+  running=false;
+  document.getElementById("start").textContent="Continuar";
+  return;
+ }
+ running=true;
+ document.getElementById("cancel").disabled=false;
+ document.getElementById("start").textContent="Pausar";
+ interval=setInterval(tick,1000);
+};
+
+document.getElementById("cancel").onclick=()=>{
+ stop();
+ remaining=chosen*60;
+ updateTimer();
+};
+
+document.getElementById("shopgrid").onclick=e=>{
+ let id=e.target.dataset.buy;
+ let p=products.find(x=>x.id===id);
+ if(!p||data.owned.includes(id)||data.coins<p.price)return;
+ data.coins-=p.price;
+ data.owned.push(id);
+ save();
+ alert("¡Has comprado "+p.name+"! 💗");
+};
+
+document.querySelectorAll("[data-avatar]").forEach(b=>{
+ b.onclick=()=>{
+  data.avatar=b.dataset.avatar;
+  save();
+ };
+});
+
+render();
+updateTimer();
+</script>
+</body>
+</html>
